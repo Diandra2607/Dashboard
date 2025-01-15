@@ -130,3 +130,21 @@ Distinct Product,
 Sum(LineTotal) as Total_Revenue
 FROM `Looker.Dashboard`					
 GROUP BY 1;
+
+With Kmeans as (
+  Select
+Distinct Product,
+Sum(LineTotal) as Total_Revenue
+FROM `Looker.Dashboard`					
+GROUP BY 1
+order by 2 desc
+)
+Select *
+EXCEPT (nearest_centroids_distance)
+FROM
+ML.PREDICT(
+  MODEL `Looker.KMeansModel`,
+  (
+    SELECT *
+    FROM
+      Kmeans));
